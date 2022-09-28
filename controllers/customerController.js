@@ -30,7 +30,7 @@ const getAllCustomer = (req, res) => {
     const { name, email, cell, location, zip_code, shipping_address, billing_address } = req.body;
 
     // validation
-    if( !name || !email || !cell || !location || !zip_code || !shipping_address || !billing_address){
+    if( !name || !email || !cell || !location || !zip_code || !shipping_address || !billing_address ){
         res.status(400).json({
             message : "All fields are required"
         });
@@ -38,13 +38,14 @@ const getAllCustomer = (req, res) => {
 
         customers.push({
             id : Math.floor(Math.random() * 1000000).toString(),
+            photo : req.file ? req.file.originalname : '',
             name : name,
             email : email,
             cell : cell,
             location : location,
             zip_code : zip_code,
             shipping_address : shipping_address,
-            billing_address : billing_address
+            billing_address : billing_address,
         });
 
         // write new customer to json db
@@ -134,6 +135,8 @@ const getAllCustomer = (req, res) => {
             ...customers[customers.findIndex( data => data.id == req.params.id )],
             ...req.body
         }
+
+        console.log(req.body);
 
         // write new data to json db
         writeFileSync(path.join(__dirname, '../db/customers.json'), JSON.stringify(customers));
